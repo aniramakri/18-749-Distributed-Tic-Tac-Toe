@@ -114,4 +114,4 @@ def testGame():
     TTT.makeMove(2,0, TTT.player1)
     TTT.makeMove(1,1, TTT.player1)
 
-testGame()
+#testGame()
