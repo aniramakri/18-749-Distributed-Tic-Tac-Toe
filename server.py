@@ -13,13 +13,16 @@ class MainHandler(tornado.web.RequestHandler):
 		print("Hello")
 		query = urlparse(self.request.uri).query
 		query_components = dict(qc.split("=") for qc in query.split("&"))
+		logfile = open("log.txt", "a+")
+		logfile.write(str(query_components))
+		logfile.write("\n")
+		logfile.close()
 		print(query_components)
 		row = query_components["row"]
 		col = query_components["col"]
 		player = query_components["player"]
 		response = ttt.makeMove(int(row), int(col), player)
 		status_resp = {"status" : response}
-		#response = ttt.getBoard()
 		print(status_resp)
 		self.write(status_resp)
 
