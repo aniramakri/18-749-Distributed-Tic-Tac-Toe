@@ -7,6 +7,9 @@ class TicTacToe:
         self.player1 = "p1" #X 
         self.player2 = "p2" #O
 
+        print("Welcome to TicTacToe!")
+        self.drawBoard()
+
     def newBoard(self):
         board = [" "]*(self.N**2)
         return board
@@ -35,6 +38,7 @@ class TicTacToe:
         return self.board[index] == " "
 
     def makeMove(self, row, col, player):
+        print("making move", row, col)
         index = self.rowcolToIndex(row, col)
 
         if (player == "p1"):
@@ -42,11 +46,20 @@ class TicTacToe:
         else:
             symbol = "O"
 
+        # If game is 
         if (not self.validMove(index)):
             print("Invalid move!")
-            return -1
+            return 2
+            
+        # If game over, return err code 1
+        if (self.gameOver()):
+            return 1
 
         self.board[index] = symbol
+        # If game over, return err code 1
+        if (self.gameOver()):
+            return 1
+
         return 0
 
     def isGameOver(self, player):
@@ -69,7 +82,6 @@ class TicTacToe:
         gameOver = row1 or row2 or row3 or col1 or col2 or col3 or diag1 or diag2
 
         if (gameOver):
-            #print("Player %s wins!" % player)
             return True
 
         return False
@@ -100,13 +112,13 @@ def testGame():
     TTT.drawBoard()
     TTT.makeMove(2,2, TTT.player1)
     TTT.drawBoard()
-    print(TTT.gameOver())
+    #print(TTT.gameOver())
     TTT.makeMove(0,2, TTT.player2)
     TTT.drawBoard()
     TTT.makeMove(1,1, TTT.player1)
     TTT.drawBoard()
-    print(TTT.gameOver())
+    #print(TTT.gameOver())
     TTT.makeMove(1,1, TTT.player1)
     TTT.drawBoard()
 
-#testGame()
+testGame()
