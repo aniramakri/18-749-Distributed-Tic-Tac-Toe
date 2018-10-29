@@ -15,24 +15,11 @@ while 1:
 	cmd = raw_input("Make your next move?")
 	cmd = cmd.split()
 	row, col = cmd[0], cmd[1]
-	params = urllib.urlencode({'@player': playerNum, '@row': row, '@col': col})
+	params = urllib.urlencode({'player': playerNum, 'row': row, 'rcol': col})
 
 	conn.request("POST", "", params, headers)
 	rsp = conn.getresponse()
 	response = rsp.read()
-
-	if response == 'INVALID MOVE':
-		cmd = print("Invalid Move! Try again!")
-		continue
-	else:
-		print(response)
-		print("Waiting for other player to make a move!")
-		conn.request("GET", "/")
-
-		rsp = conn.getresponse()
-		response = rsp.read()
-		print("Other player moved!")
-		print(response)
 
 conn.close
 
