@@ -74,9 +74,9 @@ class TicTacToe:
         row1 = board[0] + board[1] + board[2] == symbol
         row2 = board[3] + board[4] + board[5] == symbol
         row3 = board[6] + board[7] + board[8] == symbol
-        col1 = board[0] + board[1] + board[2] == symbol
-        col2 = board[3] + board[4] + board[5] == symbol
-        col3 = board[6] + board[7] + board[8] == symbol
+        col1 = board[0] + board[3] + board[6] == symbol
+        col2 = board[1] + board[4] + board[7] == symbol
+        col3 = board[2] + board[5] + board[8] == symbol
         diag1 =board[0] + board[4] + board[8] == symbol
         diag2 = board[6] + board[4] + board[2] == symbol
 
@@ -106,20 +106,12 @@ class TicTacToe:
 def testGame():
     N = 3
     TTT = TicTacToe(N)
-    TTT.drawBoard()
     TTT.makeMove(0,0, TTT.player1)
-    TTT.drawBoard()
-    TTT.makeMove(2,0, TTT.player2)
-    TTT.drawBoard()
-    TTT.makeMove(2,2, TTT.player1)
-    TTT.drawBoard()
+    TTT.makeMove(2,2, TTT.player2)
+    TTT.makeMove(1,0, TTT.player1)
     #print(TTT.gameOver())
     TTT.makeMove(0,2, TTT.player2)
-    TTT.drawBoard()
+    TTT.makeMove(2,0, TTT.player1)
     TTT.makeMove(1,1, TTT.player1)
-    TTT.drawBoard()
-    #print(TTT.gameOver())
-    TTT.makeMove(1,1, TTT.player1)
-    TTT.drawBoard()
 
-#testGame()
+testGame()
