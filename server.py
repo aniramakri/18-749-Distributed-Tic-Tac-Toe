@@ -1,13 +1,12 @@
 # Server object for tic-tac-toe
-#import os, math
-#import http.server
-#import socketserver
 import tornado.ioloop
 import tornado.web
 import sys
 from urllib.parse import urlparse
+from tictactoe import TicTacToe
 
 port = sys.argv[1]
+ttt = TicTacToe(3)
 
 class MainHandler(tornado.web.RequestHandler):
 	def get(self):
@@ -17,6 +16,11 @@ class MainHandler(tornado.web.RequestHandler):
 		row = query_components["row"]
 		col = query_components["col"]
 		player = query_components["player"]
+		response = ttt.makeMove(int(row), int(col), player)
+		status_resp = {"status" : response}
+		#response = ttt.getBoard()
+		print(status_resp)
+		self.write(status_resp)
 
 def make_app():
 	return tornado.web.Application([
