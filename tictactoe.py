@@ -84,6 +84,11 @@ class TicTacToe:
         else:
             return False
 
+    def getBoard(self):
+        return self.board
+
+
+
 
 def testGame():
     N = 3
@@ -104,4 +109,4 @@ def testGame():
     TTT.makeMove(1,1, TTT.player1)
     TTT.drawBoard()
 
-testGame()
+#testGame()
