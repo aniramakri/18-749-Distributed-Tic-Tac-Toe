@@ -3,8 +3,6 @@
 import httplib, urllib
 import sys
 
-def makeMove(row, col):
-
 http_server = sys.argv[1]
 playerNum = sys.argv[2]
 conn = httplib.HTTPConnection(http_server)
@@ -17,7 +15,7 @@ while 1:
 	row, col = cmd[0], cmd[1]
 	params = urllib.urlencode({'player': playerNum, 'row': row, 'rcol': col})
 
-	conn.request("POST", "", params, headers)
+	conn.request("GET", "", params, headers)
 	rsp = conn.getresponse()
 	response = rsp.read()
 
