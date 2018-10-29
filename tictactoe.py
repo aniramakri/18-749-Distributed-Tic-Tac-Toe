@@ -50,13 +50,14 @@ class TicTacToe:
         if (not self.validMove(index)):
             print("Invalid move!")
             return 2
-            
+
         # If game over, return err code 1
         if (self.gameOver()):
             return 1
 
         self.board[index] = symbol
         # If game over, return err code 1
+        self.drawBoard()
         if (self.gameOver()):
             return 1
 
@@ -121,4 +122,4 @@ def testGame():
     TTT.makeMove(1,1, TTT.player1)
     TTT.drawBoard()
 
-testGame()
+#testGame()
