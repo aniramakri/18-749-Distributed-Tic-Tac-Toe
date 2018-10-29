@@ -13,11 +13,12 @@ while 1:
 	cmd = raw_input("Make your next move?")
 	cmd = cmd.split()
 	row, col = cmd[0], cmd[1]
-	params = urllib.urlencode({'player': playerNum, 'row': row, 'rcol': col})
+	params = urllib.urlencode({'player': playerNum, 'row': row, 'col': col})
 
-	conn.request("GET", params)
+	conn.request("GET", "/?"+params)
 	rsp = conn.getresponse()
 	response = rsp.read()
+	print(response)
 
 conn.close
 

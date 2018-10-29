@@ -10,6 +10,7 @@ ttt = TicTacToe(3)
 
 class MainHandler(tornado.web.RequestHandler):
 	def get(self):
+		print("Hello")
 		query = urlparse(self.request.uri).query
 		query_components = dict(qc.split("=") for qc in query.split("&"))
 		print(query_components)
