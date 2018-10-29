@@ -15,7 +15,7 @@ while 1:
 	row, col = cmd[0], cmd[1]
 	params = urllib.urlencode({'player': playerNum, 'row': row, 'rcol': col})
 
-	conn.request("GET", "", params, headers)
+	conn.request("GET", params)
 	rsp = conn.getresponse()
 	response = rsp.read()
 
