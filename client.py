@@ -46,7 +46,9 @@ def heartbeat():
 			while 1:
 				try:
 					conn = httplib.HTTPConnection(http_server)
-					print(conn)
+					conn.request("GET", "/heartbeat?"+params)
+					rsp = conn.getresponse()
+					response = rsp.read()
 					hbCount = 0
 					break
 				except:
