@@ -1,0 +1,2 @@
+Expected behavior for communication faults? Right now, we just reconnect to the server when it comes back up. 
+Are we expected to do something more complicated/thorough?
