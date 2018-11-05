@@ -38,6 +38,14 @@ def heartbeat():
 			print(response)
 		except:
 			print("Down")
+			try:
+				conn = httplib.HTTPConnection(http_server)
+				conn.request("GET", "/heartbeat?"+params)
+				rsp = conn.getresponse()
+				response = rsp.read()
+			except:
+				pass
+
 			if hbCount != 3:
 				hbCount += 1
 
