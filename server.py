@@ -10,7 +10,6 @@ ttt = TicTacToe(3)
 
 class MainHandler(tornado.web.RequestHandler):
 	def get(self):
-		print("Hello")
 		query = urlparse(self.request.uri).query
 		query_components = dict(qc.split("=") for qc in query.split("&"))
 		logfile = open("log.txt", "a+")
@@ -26,9 +25,14 @@ class MainHandler(tornado.web.RequestHandler):
 		print(status_resp)
 		self.write(status_resp)
 
+class HeartbeatHandler(tornado.web.RequestHandler):
+	def get(self):
+		self.write("ALIVE")
+
 def make_app():
 	return tornado.web.Application([
 		(r"/", MainHandler),
+		(r"/heartbeat", HeartbeatHandler),
 	])
 
 if __name__ == "__main__":
