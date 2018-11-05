@@ -27,9 +27,13 @@ def move():
 
 
 def heartbeat():
+	pass
 
 
 try:
-    thread.start_new_thread(move, ())
+	print("In try")
+	thread.start_new_thread(move, ())
 except:
-    print("Error, unable to start new thread")
+	print("Error, unable to start new thread")
+while 1:
+	pass
