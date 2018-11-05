@@ -27,12 +27,22 @@ def move():
 
 
 def heartbeat():
-	pass
+	while 1:
+        params = urllib.urlencode({})
+        conn.request("GET", "/heartbeat?"+params)
+        rsp = conn.getresponse()
+        response = rsp.read()
+        print(response)
+
+        # Sleep for the amount of time to simualte heartbeat
+        time.sleep(heartbeatInterval)
+
 
 
 try:
 	print("In try")
 	thread.start_new_thread(move, ())
+    thread.start_new_thread(heartbeat, ())
 except:
 	print("Error, unable to start new thread")
 while 1:
