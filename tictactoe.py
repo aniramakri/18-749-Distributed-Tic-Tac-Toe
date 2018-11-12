@@ -41,6 +41,10 @@ class TicTacToe:
         print("making move", row, col)
         index = self.rowcolToIndex(row, col)
 
+        if (index == -1):
+            print("Invalid move! Out of bounds.")
+            return 2
+
         if (player == "p1"):
             symbol = "X"
         else:
@@ -101,8 +105,6 @@ class TicTacToe:
         return self.board
 
 
-
-
 def testGame():
     N = 3
     TTT = TicTacToe(N)
@@ -113,5 +115,8 @@ def testGame():
     TTT.makeMove(0,2, TTT.player2)
     TTT.makeMove(2,0, TTT.player1)
     TTT.makeMove(1,1, TTT.player1)
+    a = TTT.getBoard()
+    #serialized = serializeBoard(a)
+    #des = deserializeBoard(serialized)
 
 #testGame()
