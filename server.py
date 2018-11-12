@@ -47,8 +47,6 @@ def initState():
 		lf.write(emptyBoard)
 		lf.close()
 
-#initState()
-
 class MainHandler(tornado.web.RequestHandler):
 	def get(self):
 		global LOGFILE
