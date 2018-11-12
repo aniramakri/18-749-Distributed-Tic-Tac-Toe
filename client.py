@@ -3,11 +3,13 @@
 import httplib, urllib
 import sys, time, thread
 
-http_server = sys.argv[1]
-playerNum = sys.argv[2]
+http_server_1 = sys.argv[1]
+http_server_2 = sys.argv[2]
+playerNum = sys.argv[3]
+current_http_server = http_server_1
 # In seconds
-heartbeatInterval = float(int(sys.argv[3]))
-conn = httplib.HTTPConnection(http_server)
+heartbeatInterval = float(int(sys.argv[4]))
+conn = httplib.HTTPConnection(current_http_server)
 headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}
 
 
@@ -28,6 +30,7 @@ def move():
 
 def heartbeat():
 	global conn
+	global current_http_server
 	hbCount = 0
 	while 1:
 		params = urllib.urlencode({})
@@ -39,7 +42,7 @@ def heartbeat():
 		except:
 			print("Down")
 			try:
-				conn = httplib.HTTPConnection(http_server)
+				conn = httplib.HTTPConnection(current_http_server)
 				conn.request("GET", "/heartbeat?"+params)
 				rsp = conn.getresponse()
 				response = rsp.read()
@@ -53,13 +56,20 @@ def heartbeat():
 			print("Actually down")
 			while 1:
 				try:
-					conn = httplib.HTTPConnection(http_server)
+					if current_http_server == http_server_1:
+						connect_http_server = http_server_2
+					else:
+						connect_http_server = http_server_1
+					conn = httplib.HTTPConnection(connect_http_server)
 					conn.request("GET", "/heartbeat?"+params)
 					rsp = conn.getresponse()
 					response = rsp.read()
 					hbCount = 0
+					current_http_server = connect_http_server
 					break
-				except:
+				except Exception as e:
+					#print(e)
+					#time.sleep(heartbeatInterval)
 					continue
 
 		# Sleep for the amount of time to simualte heartbeat
