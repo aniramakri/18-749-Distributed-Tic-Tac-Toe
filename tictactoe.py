@@ -14,6 +14,22 @@ class TicTacToe:
         board = [" "]*(self.N**2)
         return board
 
+    def setBoard(self, board):
+        #self.drawBoard()
+        if (not board):
+            print("setBoard: invalid board")
+            return
+
+        if (len(board) != self.N**2):
+            print("setBoard: invalid dimensions")
+            return
+
+        self.board = board
+        #print("Updated board: ")
+        #self.drawBoard()
+        return
+
+
     def drawBoard(self):
         N = self.N
         board = self.board
@@ -104,7 +120,6 @@ class TicTacToe:
     def getBoard(self):
         return self.board
 
-
 def testGame():
     N = 3
     TTT = TicTacToe(N)
@@ -116,7 +131,8 @@ def testGame():
     TTT.makeMove(2,0, TTT.player1)
     TTT.makeMove(1,1, TTT.player1)
     a = TTT.getBoard()
-    #serialized = serializeBoard(a)
-    #des = deserializeBoard(serialized)
+    serialized = serializeBoard(a)
+    des = deserializeBoard(serialized)
+    TTT.setBoard(des)
 
 #testGame()
