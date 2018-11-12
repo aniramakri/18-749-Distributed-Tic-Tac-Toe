@@ -8,6 +8,7 @@ from tictactoe import TicTacToe
 port = sys.argv[1]
 ttt = TicTacToe(3)
 LOGFILE = "log.txt"
+count = 0
 
 def serializeBoard(board):
     serialized = ""
@@ -46,12 +47,18 @@ def initState():
 		lf.write(emptyBoard)
 		lf.close()
 
-initState()
-
+#initState()
 
 class MainHandler(tornado.web.RequestHandler):
 	def get(self):
 		global LOGFILE
+		global count
+
+		if count == 0:
+			initState()		
+
+		count += 1
+
 		query = urlparse(self.request.uri).query
 		query_components = dict(qc.split("=") for qc in query.split("&"))
 
