@@ -1,13 +1,13 @@
 # Server object for tic-tac-toe
 import tornado.ioloop
 import tornado.web
-import sys
+import sys, os
 from urllib.parse import urlparse
 from tictactoe import TicTacToe
 
 port = sys.argv[1]
 ttt = TicTacToe(3)
-
+LOGFILE = "log.txt"
 
 def serializeBoard(board):
     serialized = ""
@@ -29,9 +29,29 @@ def deserializeBoard(s):
 
     return board
 
+def initState():
+	global LOGFILE
+	# If file exists, read latest checkpoint (aka last row)
+	if (os.path.isfile(LOGFILE)):
+		with open(LOGFILE, 'rb') as fh:
+			recoveredBoard = fh.readlines()[-1].decode()
+			deserial = deserializeBoard(recoveredBoard)
+			print("recovered from: ", deserial)
+			ttt.setBoard(deserial)
+
+	else:
+		# Otherwise, initialize new file with empty board
+		lf = open(LOGFILE, "a+")
+		emptyBoard = serializeBoard(ttt.newBoard())
+		lf.write(emptyBoard)
+		lf.close()
+
+initState()
+
 
 class MainHandler(tornado.web.RequestHandler):
 	def get(self):
+		global LOGFILE
 		query = urlparse(self.request.uri).query
 		query_components = dict(qc.split("=") for qc in query.split("&"))
 
@@ -45,11 +65,25 @@ class MainHandler(tornado.web.RequestHandler):
 		self.write(status_resp)
 
 		# Checkpoint every move
-		logfile = open("log.txt", "a+")
+		logfile = open(LOGFILE, "a+")
 		board = ttt.getBoard()
+
+		# Check if game is over, if so, write a new empty board 
+		newBoard = None
+		if (ttt.gameOver()):
+			newBoard = ttt.newBoard()
+		# Serialzie the original board
 		serialized = serializeBoard(board)
 		logfile.write(serialized)
+		
+		if (newBoard):
+			sb = serializeBoard(newBoard)
+			logfile.write(sb)
+
 		logfile.close()
+
+
+
 
 class HeartbeatHandler(tornado.web.RequestHandler):
 	def get(self):
