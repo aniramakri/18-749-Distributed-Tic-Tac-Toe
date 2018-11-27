@@ -2,9 +2,10 @@
 import tornado.ioloop
 import tornado.web
 import sys, os
-from urllib.parse import urlparse
+from urllib.parse import urlparse, unquote
 from tictactoe import TicTacToe
 
+port = sys.argv[1]
 CHECKPOINTFILE = "checkpoint.txt"
 LOGFILE = "log.txt"
 
@@ -12,16 +13,14 @@ class LogHandler(tornado.web.RequestHandler):
 	def get(self):
 		global CHECKPOINTFILE
 		global LOGFILE
-				global CHECKPOINTFILE
-		global LOGFILE
 		global count
 		global checkpointRate
 
 		query = urlparse(self.request.uri).query
 		query_components = dict(qc.split("=") for qc in query.split("&"))
 
-		log = query_components["log"]
-
+		log = unquote(query_components["log"]).replace('+', ' ')
+		print(log)
 		# Checkpoint every move
 		logFile = open(LOGFILE, "a+")
 		logFile.write(log)
@@ -32,16 +31,12 @@ class CheckpointHandler(tornado.web.RequestHandler):
 	def get(self):
 		global CHECKPOINTFILE
 		global LOGFILE
-
+		print("ADDING CHECKPOINT")
 		query = urlparse(self.request.uri).query
 		query_components = dict(qc.split("=") for qc in query.split("&"))
 
-		state = query_components["state"]
-
-		status_resp = {"status" : response}
-		print(status_resp)
-		self.write(status_resp)
-
+		state = unquote(query_components["board"]).replace('+', ' ')
+		print(state)
 		# Checkpoint every move
 		checkpointfile = open(CHECKPOINTFILE, "a+")
 		checkpointfile.write(state)
@@ -52,35 +47,23 @@ class CheckpointHandler(tornado.web.RequestHandler):
 
 class GrabCheckpointHandler(tornado.web.RequestHandler):
 	def get(self):
+		print("GRABBING CHECKPOINT")
 		global CHECKPOINTFILE
-
-		query = urlparse(self.request.uri).query
-		query_components = dict(qc.split("=") for qc in query.split("&"))
-
-		state = query_components["state"]
-
 		# Grab latest checkpoint
 		with open(CHECKPOINTFILE, 'rb') as fh:
 			recoveredBoard = fh.readlines()[-1].decode()
 
-		status_resp = {"board" : recoveredBoard}
-		self.write(status_resp)
+		self.write(recoveredBoard)
 
 class GrabLogHandler(tornado.web.RequestHandler):
 	def get(self):
+		print("GRABBING LOG")
 		global CHECKPOINTFILE
 		global LOGFILE
-
-		query = urlparse(self.request.uri).query
-		query_components = dict(qc.split("=") for qc in query.split("&"))
-
-		state = query_components["state"]
-
 		# Checkpoint every move
 		with open(LOGFILE, 'rb') as fh:
-			moves = fh.readlines()
-		status_resp = {"move" : moves}
-		self.write(status_resp)
+			moves = fh.read()
+		self.write(moves)
 
 
 def make_app():
