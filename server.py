@@ -6,8 +6,9 @@ from urllib.parse import urlparse
 from tictactoe import TicTacToe
 
 port = sys.argv[1]
+checkpointRate = sys.argv[2]
+databaseServer = sys.argv[3]
 ttt = TicTacToe(3)
-LOGFILE = "log.txt"
 count = 0
 
 def serializeBoard(board):
@@ -30,6 +31,18 @@ def deserializeBoard(s):
 
     return board
 
+def writeCheckpoint(serializedBoard):
+	params = urllib.urlencode({'board': serializedBoard})
+	conn = httplib.HTTPConnection(databaseServer)
+	conn.request("GET", "/checkpoint?"+params)
+	rsp = conn.getresponse()
+
+def writeLog(move):
+	params = urllib.urlencode({'move': move})
+	conn = httplib.HTTPConnection(databaseServer)
+	conn.request("GET", "/log?"+params)
+	rsp = conn.getresponse()
+
 def initState():
 	global LOGFILE
 	# If file exists, read latest checkpoint (aka last row)
@@ -49,10 +62,13 @@ def initState():
 
 class MainHandler(tornado.web.RequestHandler):
 	def get(self):
+		global CHECKPOINTFILE
 		global LOGFILE
 		global count
+		global checkpointRate
 
 		if count == 0:
+			print("initializing state")
 			initState()		
 
 		count += 1
@@ -69,8 +85,10 @@ class MainHandler(tornado.web.RequestHandler):
 		print(status_resp)
 		self.write(status_resp)
 
-		# Checkpoint every move
-		logfile = open(LOGFILE, "a+")
+		# Log every move
+		move = row + " " + col + " " + player + "\n"
+		writeLog(move)
+
 		board = ttt.getBoard()
 
 		# Check if game is over, if so, write a new empty board 
@@ -79,13 +97,15 @@ class MainHandler(tornado.web.RequestHandler):
 			newBoard = ttt.newBoard()
 		# Serialzie the original board
 		serialized = serializeBoard(board)
-		logfile.write(serialized)
+		if count%checkPoint == 0:
+			writeCheckpoint(serialized)
 		
 		if (newBoard):
 			sb = serializeBoard(newBoard)
-			logfile.write(sb)
+			writeCheckpoint(sb)
 
-		logfile.close()
+		checkpointfile.close()
+
 
 
 
