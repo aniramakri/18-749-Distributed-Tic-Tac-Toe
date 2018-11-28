@@ -29,6 +29,8 @@ def move():
 
 def attempt_connect(connect_http_server, params):
 	attempt_start = time.time()
+	global conn
+	global current_http_server
 	while(1):
 		try:
 			conn = httplib.HTTPConnection(connect_http_server)
@@ -57,8 +59,9 @@ def heartbeat():
 			rsp = conn.getresponse()
 			response = rsp.read()
 			print(response)
-		except:
+		except Exception as e:
 			print("Down")
+			print(e)
 			try:
 				conn = httplib.HTTPConnection(current_http_server)
 				conn.request("GET", "/heartbeat?"+params)
