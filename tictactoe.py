@@ -8,7 +8,6 @@ class TicTacToe:
         self.player2 = "p2" #O
 
         print("Welcome to TicTacToe!")
-        self.drawBoard()
 
     def newBoard(self):
         board = [" "]*(self.N**2)
@@ -53,8 +52,9 @@ class TicTacToe:
     def validMove(self, index):
         return self.board[index] == " "
 
-    def makeMove(self, row, col, player):
-        print("making move", row, col)
+    def makeMove(self, row, col, player, draw = True, toPrint=True):
+        if toPrint:
+            print("making move", row, col)
         index = self.rowcolToIndex(row, col)
 
         if (index == -1):
@@ -77,7 +77,8 @@ class TicTacToe:
 
         self.board[index] = symbol
         # If game over, return err code 1
-        self.drawBoard()
+        if draw:
+            self.drawBoard()
         if (self.gameOver()):
             return 1
 
