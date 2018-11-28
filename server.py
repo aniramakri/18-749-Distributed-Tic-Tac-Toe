@@ -74,11 +74,14 @@ def initState():
 	totalLogs = logs.split("\n")
 	for log in totalLogs:
 		args = log.split(" ")
-		response = ttt.makeMove(int(args[0]), int(args[1]), args[2])
-		status_resp = {"status" : response}
-		print(status_resp)
-		if (ttt.gameOver()):
-			newBoard = ttt.newBoard()
+		print("ARGUMENTS")
+		if len(args) == 3:
+			print(args[0], args[1], args[2])
+			response = ttt.makeMove(int(args[0]), int(args[1]), args[2], False)
+			status_resp = {"status" : response}
+			print(status_resp)
+			if (ttt.gameOver()):
+				newBoard = ttt.newBoard()
 
 
 class MainHandler(tornado.web.RequestHandler):
@@ -116,14 +119,14 @@ class MainHandler(tornado.web.RequestHandler):
 		newBoard = None
 		if (ttt.gameOver()):
 			newBoard = ttt.newBoard()
+			ttt.setBoard(newBoard)
+			ttt.drawBoard()
+			sb = serializeBoard(newBoard)
+			writeCheckpoint(sb)
 		# Serialzie the original board
 		serialized = serializeBoard(board)
 		if count%checkpointRate == 0:
 			writeCheckpoint(serialized)
-
-		if (newBoard):
-			sb = serializeBoard(newBoard)
-			writeCheckpoint(sb)
 
 class HeartbeatHandler(tornado.web.RequestHandler):
 	def get(self):
