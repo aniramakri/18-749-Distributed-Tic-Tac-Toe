@@ -51,7 +51,6 @@ def getLog():
 	params = urllib.parse.urlencode({'move': " "})
 	conn = http.client.HTTPConnection(databaseServer)
 	conn.request("GET", "/grabLog?"+params)
-	prin
 	rsp = conn.getresponse()
 	return rsp.read().decode('utf-8')
 
@@ -91,7 +90,7 @@ class MainHandler(tornado.web.RequestHandler):
 
 		if count == 0:
 			print("initializing state")
-			initState()		
+			initState()
 
 		count += 1
 
@@ -113,7 +112,7 @@ class MainHandler(tornado.web.RequestHandler):
 
 		board = ttt.getBoard()
 
-		# Check if game is over, if so, write a new empty board 
+		# Check if game is over, if so, write a new empty board
 		newBoard = None
 		if (ttt.gameOver()):
 			newBoard = ttt.newBoard()
@@ -121,7 +120,7 @@ class MainHandler(tornado.web.RequestHandler):
 		serialized = serializeBoard(board)
 		if count%checkpointRate == 0:
 			writeCheckpoint(serialized)
-		
+
 		if (newBoard):
 			sb = serializeBoard(newBoard)
 			writeCheckpoint(sb)

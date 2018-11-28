@@ -27,6 +27,24 @@ def move():
 
     conn.close
 
+def attempt_connect(connect_http_server, params):
+	attempt_start = time.time()
+	while(1):
+		try:
+			conn = httplib.HTTPConnection(connect_http_server)
+			conn.request("GET", "/heartbeat?"+params)
+			rsp = conn.getresponse()
+			response = rsp.read()
+			current_http_server = connect_http_server
+			return True
+		except Exception as e:
+			if time.time() - attempt_start > 3 * heartbeatInterval:
+				return False
+			else:
+				continue
+
+
+
 
 def heartbeat():
 	global conn
@@ -54,23 +72,21 @@ def heartbeat():
 
 		if hbCount == 3:
 			print("Actually down")
+			if current_http_server == http_server_1:
+				connect_http_server = http_server_2
+			else:
+				connect_http_server = http_server_1
 			while 1:
-				try:
-					if current_http_server == http_server_1:
+				print("attempting to connect to " + connect_http_server)
+				attempt = attempt_connect(connect_http_server, params)
+				if attempt:
+					hbCount = 0
+					break
+				else:
+					if connect_http_server == http_server_1:
 						connect_http_server = http_server_2
 					else:
 						connect_http_server = http_server_1
-					conn = httplib.HTTPConnection(connect_http_server)
-					conn.request("GET", "/heartbeat?"+params)
-					rsp = conn.getresponse()
-					response = rsp.read()
-					hbCount = 0
-					current_http_server = connect_http_server
-					break
-				except Exception as e:
-					#print(e)
-					#time.sleep(heartbeatInterval)
-					continue
 
 		# Sleep for the amount of time to simualte heartbeat
 		time.sleep(heartbeatInterval)
