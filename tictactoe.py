@@ -4,8 +4,8 @@ class TicTacToe:
     def __init__(self, N):
         self.N = N
         self.board = self.newBoard()
-        self.player1 = "p1" #X 
-        self.player2 = "p2" #O
+        self.player1 = 'p1' #X 
+        self.player2 = 'p2' #O
 
         print("Welcome to TicTacToe!")
 
@@ -61,7 +61,7 @@ class TicTacToe:
             print("Invalid move! Out of bounds.")
             return 2
 
-        if (player == "p1"):
+        if (player == self.player1):
             symbol = "X"
         else:
             symbol = "O"
