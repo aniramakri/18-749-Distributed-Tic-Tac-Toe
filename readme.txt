@@ -1,4 +1,4 @@
-For running server: python3 server.py 8888 1 localhost:9000
+For running server: python3 server.py 8888 1 localhost:9000 ALICE
 					(server port) (checkpointing rate) (database localhost)
 For running database: python3 database.py 9000
 					 (port number)
