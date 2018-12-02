@@ -85,7 +85,7 @@ class TicTacToe:
         return 0
 
     def isGameOver(self, player):
-        if (player == "p1"):
+        if (player == self.player1):
             symbol = "XXX"
         else:
             symbol = "OOO"
