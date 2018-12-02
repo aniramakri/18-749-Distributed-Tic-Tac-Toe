@@ -1,4 +1,4 @@
-import math
+import math, time
 
 class TicTacToe:
     def __init__(self, N):
@@ -54,7 +54,7 @@ class TicTacToe:
 
     def makeMove(self, row, col, player, draw = True, toPrint=True):
         if toPrint:
-            print("making move", row, col)
+            print(time.ctime() + ": Player %s making move at (%d,%d)" % (playter, row, col))
         index = self.rowcolToIndex(row, col)
 
         if (index == -1):
