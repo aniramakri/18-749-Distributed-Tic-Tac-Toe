@@ -20,7 +20,9 @@ class LogHandler(tornado.web.RequestHandler):
 		query_components = dict(qc.split("=") for qc in query.split("&"))
 
 		log = unquote(query_components["log"]).replace('+', ' ')
-		print(log)
+		serverName = unquote(query_components["server"]).replace('+', ' ')
+		print(serverName + " is adding move to the message log")
+
 		# Checkpoint every move
 		logFile = open(LOGFILE, "a+")
 		logFile.write(log)
@@ -31,11 +33,13 @@ class CheckpointHandler(tornado.web.RequestHandler):
 	def get(self):
 		global CHECKPOINTFILE
 		global LOGFILE
-		print("ADDING CHECKPOINT")
 		query = urlparse(self.request.uri).query
 		query_components = dict(qc.split("=") for qc in query.split("&"))
 
 		state = unquote(query_components["board"]).replace('+', ' ')
+		serverName = unquote(query_components["server"]).replace('+', ' ')
+		print(serverName + " is adding a checkpoint and deleting old messages")
+
 		print(state)
 		# Checkpoint every move
 		checkpointfile = open(CHECKPOINTFILE, "a+")
@@ -47,7 +51,11 @@ class CheckpointHandler(tornado.web.RequestHandler):
 
 class GrabCheckpointHandler(tornado.web.RequestHandler):
 	def get(self):
-		print("GRABBING CHECKPOINT")
+		query = urlparse(self.request.uri).query
+		query_components = dict(qc.split("=") for qc in query.split("&"))
+
+		serverName = unquote(query_components["server"]).replace('+', ' ')
+		print(serverName + "is grabbing latest checkpoint")
 		global CHECKPOINTFILE
 		# Grab latest checkpoint
 		with open(CHECKPOINTFILE, 'rb') as fh:
@@ -57,7 +65,11 @@ class GrabCheckpointHandler(tornado.web.RequestHandler):
 
 class GrabLogHandler(tornado.web.RequestHandler):
 	def get(self):
-		print("GRABBING LOG")
+		query = urlparse(self.request.uri).query
+		query_components = dict(qc.split("=") for qc in query.split("&"))
+
+		serverName = unquote(query_components["server"]).replace('+', ' ')
+		print(serverName + " is grabbing remaining messages")
 		global CHECKPOINTFILE
 		global LOGFILE
 		# Checkpoint every move

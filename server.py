@@ -27,25 +27,26 @@ def deserializeBoard(s):
     return board
 
 def writeCheckpoint(serializedBoard):
-	params = urllib.parse.urlencode({'board': serializedBoard.encode()})
+	print(databaseServer + " checkpointing to database")
+	params = urllib.parse.urlencode({'board': serializedBoard.encode(), 'server': databaseServer})
 	conn = http.client.HTTPConnection(databaseServer)
 	conn.request("GET", "/checkpoint?"+params)
 	rsp = conn.getresponse()
 
 def writeLog(move):
-	params = urllib.parse.urlencode({'log': move})
+	params = urllib.parse.urlencode({'log': move, 'server': databaseServer})
 	conn = http.client.HTTPConnection(databaseServer)
 	conn.request("GET", "/log?"+params)
 
 def getLog():
-	params = urllib.parse.urlencode({'move': " "})
+	params = urllib.parse.urlencode({'move': " ", 'server': databaseServer})
 	conn = http.client.HTTPConnection(databaseServer)
 	conn.request("GET", "/grabLog?"+params)
 	rsp = conn.getresponse()
 	return rsp.read().decode('utf-8')
 
 def getCheckpoint():
-	params = urllib.parse.urlencode({'state': " "})
+	params = urllib.parse.urlencode({'state': " ", 'server': databaseServer})
 	conn = http.client.HTTPConnection(databaseServer)
 	conn.request("GET", "/grabCheckpoint?"+params)
 	rsp = conn.getresponse()
