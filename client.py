@@ -61,7 +61,7 @@ def heartbeat():
 			response = rsp.read()
 			print("# " + playerNum + " # " + response)
 		except Exception as e:
-			print("Down")
+			print("# " + playerNum + " # " + time.ctime() + ": " + current_http_server + " is not connecting")
 			print(e)
 			try:
 				conn = httplib.HTTPConnection(current_http_server)
@@ -75,13 +75,13 @@ def heartbeat():
 				hbCount += 1
 
 		if hbCount == 3:
-			print("Actually down")
+			print("# " + playerNum + " # " + time.ctime() + ": " + current_http_server + " is officially down")
 			if current_http_server == http_server_1:
 				connect_http_server = http_server_2
 			else:
 				connect_http_server = http_server_1
 			while 1:
-				print("attempting to connect to " + connect_http_server)
+				print("# " + playerNum + " # " + time.ctime() + ": " + "Attempting to connect to " +  connect_http_server )
 				attempt = attempt_connect(connect_http_server, params)
 				if attempt:
 					hbCount = 0

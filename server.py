@@ -28,26 +28,26 @@ def deserializeBoard(s):
     return board
 
 def writeCheckpoint(serializedBoard):
-	print(databaseServer + " checkpointing to database")
-	params = urllib.parse.urlencode({'board': serializedBoard.encode(), 'server': databaseServer})
+	print(time.ctime() + ": " + databaseServer + " is checkpointing to database")
+	params = urllib.parse.urlencode({'board': serializedBoard.encode(), 'server': serverName})
 	conn = http.client.HTTPConnection(databaseServer)
 	conn.request("GET", "/checkpoint?"+params)
 	rsp = conn.getresponse()
 
 def writeLog(move):
-	params = urllib.parse.urlencode({'log': move, 'server': databaseServer})
+	params = urllib.parse.urlencode({'log': move, 'server': serverName})
 	conn = http.client.HTTPConnection(databaseServer)
 	conn.request("GET", "/log?"+params)
 
 def getLog():
-	params = urllib.parse.urlencode({'move': " ", 'server': databaseServer})
+	params = urllib.parse.urlencode({'move': " ", 'server': serverName})
 	conn = http.client.HTTPConnection(databaseServer)
 	conn.request("GET", "/grabLog?"+params)
 	rsp = conn.getresponse()
 	return rsp.read().decode('utf-8')
 
 def getCheckpoint():
-	params = urllib.parse.urlencode({'state': " ", 'server': databaseServer})
+	params = urllib.parse.urlencode({'state': " ", 'server': serverName})
 	conn = http.client.HTTPConnection(databaseServer)
 	conn.request("GET", "/grabCheckpoint?"+params)
 	rsp = conn.getresponse()
@@ -118,7 +118,7 @@ class HeartbeatHandler(tornado.web.RequestHandler):
 		self.write(time.ctime())
 		self.write(": ")
 		self.write(serverName)
-		self.write(" IS ALIVE")
+		self.write(" is alive")
 
 def make_app():
 	return tornado.web.Application([

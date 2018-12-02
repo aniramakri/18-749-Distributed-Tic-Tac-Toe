@@ -4,6 +4,7 @@ import tornado.web
 import sys, os
 from urllib.parse import urlparse, unquote
 from tictactoe import TicTacToe
+import time
 
 port = sys.argv[1]
 CHECKPOINTFILE = "checkpoint.txt"
@@ -21,7 +22,7 @@ class LogHandler(tornado.web.RequestHandler):
 
 		log = unquote(query_components["log"]).replace('+', ' ')
 		serverName = unquote(query_components["server"]).replace('+', ' ')
-		print(serverName + " is adding move to the message log")
+		print(time.ctime() + ": " +serverName + " is adding move to the message log")
 
 		# Checkpoint every move
 		logFile = open(LOGFILE, "a+")
@@ -38,9 +39,8 @@ class CheckpointHandler(tornado.web.RequestHandler):
 
 		state = unquote(query_components["board"]).replace('+', ' ')
 		serverName = unquote(query_components["server"]).replace('+', ' ')
-		print(serverName + " is adding a checkpoint and deleting old messages")
+		print(time.ctime() + ": " +serverName + " is adding a checkpoint and deleting old messages")
 
-		print(state)
 		# Checkpoint every move
 		checkpointfile = open(CHECKPOINTFILE, "a+")
 		checkpointfile.write(state)
@@ -55,7 +55,7 @@ class GrabCheckpointHandler(tornado.web.RequestHandler):
 		query_components = dict(qc.split("=") for qc in query.split("&"))
 
 		serverName = unquote(query_components["server"]).replace('+', ' ')
-		print(serverName + "is grabbing latest checkpoint")
+		print(time.ctime() + ": " + serverName + " is grabbing latest checkpoint")
 		global CHECKPOINTFILE
 		# Grab latest checkpoint
 		with open(CHECKPOINTFILE, 'rb') as fh:
@@ -69,7 +69,7 @@ class GrabLogHandler(tornado.web.RequestHandler):
 		query_components = dict(qc.split("=") for qc in query.split("&"))
 
 		serverName = unquote(query_components["server"]).replace('+', ' ')
-		print(serverName + " is grabbing remaining messages")
+		print(time.ctime() + ": " +serverName + " is grabbing remaining messages")
 		global CHECKPOINTFILE
 		global LOGFILE
 		# Checkpoint every move
