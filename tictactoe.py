@@ -54,7 +54,7 @@ class TicTacToe:
 
     def makeMove(self, row, col, player, draw = True, toPrint=True):
         if toPrint:
-            print(time.ctime() + ": Player %s making move at (%d,%d)" % (playter, row, col))
+            print(time.ctime() + ": Player %s making move at (%d,%d)" % (player, row, col))
         index = self.rowcolToIndex(row, col)
 
         if (index == -1):
