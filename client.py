@@ -51,6 +51,7 @@ def attempt_connect(connect_http_server, params):
 def heartbeat():
 	global conn
 	global current_http_server
+	global playerNum
 	hbCount = 0
 	while 1:
 		params = urllib.urlencode({})
@@ -58,7 +59,7 @@ def heartbeat():
 			conn.request("GET", "/heartbeat?"+params)
 			rsp = conn.getresponse()
 			response = rsp.read()
-			print(response)
+			print("# " + playerNum + " # " + response)
 		except Exception as e:
 			print("Down")
 			print(e)

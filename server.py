@@ -5,6 +5,7 @@ import sys, os
 from urllib.parse import urlparse,unquote
 from tictactoe import TicTacToe
 import http.client, urllib
+import time
 
 def serializeBoard(board):
     serialized = ""
@@ -113,7 +114,11 @@ class MainHandler(tornado.web.RequestHandler):
 
 class HeartbeatHandler(tornado.web.RequestHandler):
 	def get(self):
-		self.write("ALIVE")
+		global serverName
+		self.write(time.ctime())
+		self.write(": ")
+		self.write(serverName)
+		self.write(" IS ALIVE")
 
 def make_app():
 	return tornado.web.Application([
@@ -124,6 +129,7 @@ def make_app():
 port = sys.argv[1]
 checkpointRate = int(sys.argv[2])
 databaseServer = sys.argv[3]
+serverName = sys.argv[4]
 ttt = TicTacToe(3)
 ttt.drawBoard()
 count = 0
